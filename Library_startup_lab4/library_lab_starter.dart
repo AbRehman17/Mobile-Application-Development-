@@ -45,9 +45,31 @@ void main() {
   step10();
 }
 
+// Step 1
+class LibraryItem {
+  final String title;
+  final int year;
+  LibraryItem(this.title, this.year);
+}
+
+class Book extends LibraryItem {
+  final int pages;
+  Book(super.title, super.year, this.pages);
+}
+
+Book mainBook() {
+  return Book(titles[u], yearOf(u), 100 + 3 * seed);
+}
+
 void step1() {
   print('--- Step 1 ---');
+  Book b = mainBook();
+  print('Step 1: ${b.title} (${b.year}), ${b.pages} pages');
+  LibraryItem item = b;
+  print('Step 1: stored as LibraryItem: ${item.title}');
+  print('Step 1: runtimeType = ${item.runtimeType}');
 }
+// Step 2
 
 void step2() {
   print('--- Step 2 ---');
