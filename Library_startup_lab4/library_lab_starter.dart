@@ -203,6 +203,20 @@ class Fine {
   String toString() => 'Fine($amount)';
 }
 
+class Member {
+  final String name;
+  final MemberType type;
+
+  Member(this.name, this.type);
+
+  Fine feeFor(LibraryItem item, int days) {
+    int fee = item.lateFee(days);
+    fee = LibraryItem.capFee(fee);
+    fee = type.applyDiscount(fee);
+    return Fine(fee);
+  }
+}
+
 void step1() {
   print('--- Step 1 ---');
   Book b = mainBook();
@@ -332,4 +346,28 @@ void step9() {
 
 void step10() {
   print('--- Step 10 ---');
+  List<LibraryItem> shelf = buildShelf();
+  Member member = Member('S$seed', MemberType.values[seed % 3]);
+  Fine total = shelf.fold(
+    Fine(0),
+    (Fine sum, LibraryItem item) => sum + member.feeFor(item, daysLate),
+  );
+  int borrowable = 0;
+  int renewable = 0;
+  for (var item in shelf) {
+    if (item is Borrowable) borrowable++;
+    if (item is Renewable) renewable++;
+  }
+  print(
+    'Step 10: ${shelf.length} items, $borrowable borrowable, $renewable renewable',
+  );
+  print('Step 10: ${member.name} (${member.type.name}) owes $total');
+  print('Step 10: over the cap? ${total > Fine(feeCap)}');
+  // one polymorphic loop over a List<LibraryItem> handles Books, Magazines and Dvds
+  // with no if on the type.
+  // The polymorphic loop works because lateFee() is declared abstract in
+  // LibraryItem and each subclass provides its own implementation. Dart
+  // dispatches the call at runtime based on the actual object type, so no
+  // if/else on type is needed. The 'is' checks are only for counting
+  // borrowable and renewable items — not for fee calculation.
 }
