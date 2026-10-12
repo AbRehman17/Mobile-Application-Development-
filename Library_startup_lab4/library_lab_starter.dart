@@ -45,20 +45,34 @@ void main() {
   step10();
 }
 
-// Step 1
 class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
+  String describe() => '${title} (${year})';
 }
 
 class Book extends LibraryItem {
   final int pages;
   Book(super.title, super.year, this.pages);
+  @override
+  String describe() => '${super.describe()}, ${pages} pages';
 }
 
 Book mainBook() {
   return Book(titles[u], yearOf(u), 100 + 3 * seed);
+}
+
+class Magazine extends LibraryItem {
+  final int issue;
+  Magazine(super.title, super.year, this.issue);
+  @override
+  String describe() => '${super.describe()}, issue ${issue}';
+}
+
+Magazine mainMagazine() {
+  int i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
 }
 
 void step1() {
@@ -69,10 +83,14 @@ void step1() {
   print('Step 1: stored as LibraryItem: ${item.title}');
   print('Step 1: runtimeType = ${item.runtimeType}');
 }
-// Step 2
 
 void step2() {
   print('--- Step 2 ---');
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+  // What would happen to the output if you forgot @override and mistyped the method name as descibe()?
+  // If we mistype describe() as descibe(), it will not override
+  // the parent method. @override helps the analyzer catch this mistake.
 }
 
 void step3() {
