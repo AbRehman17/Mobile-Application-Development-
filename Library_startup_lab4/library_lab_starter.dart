@@ -53,13 +53,31 @@ abstract class LibraryItem {
   int lateFee(int days);
 }
 
-class Book extends LibraryItem {
+abstract class Borrowable {
+  bool get isAvailable;
+  void borrow();
+  void giveBack();
+}
+
+class Book extends LibraryItem implements Borrowable {
   final int pages;
+  bool _out = false;
   Book(super.title, super.year, this.pages);
   @override
   String describe() => '${super.describe()}, ${pages} pages';
   @override
   int lateFee(int days) => days * feePerDay;
+  @override
+  bool get isAvailable => !_out;
+  @override
+  void borrow() {
+    _out = true;
+  }
+
+  @override
+  void giveBack() {
+    _out = false;
+  }
 }
 
 Book mainBook() {
@@ -128,6 +146,19 @@ void step3() {
 
 void step4() {
   print('--- Step 4 ---');
+  Book book = mainBook();
+  print('Step 4: available? ${book.isAvailable}');
+  book.borrow();
+  print('Step 4: after borrow? ${book.isAvailable}');
+  book.giveBack();
+  print('Step 4: after return? ${book.isAvailable}');
+  List<LibraryItem> items = [book, mainMagazine(), mainDvd()];
+  for (var item in items) {
+    print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');
+  }
+  // You wrote all three method bodies yourself. What would extends Borrowable have given you for free, and why is that not what you wanted?
+  // Extending Borrowable would inherit its implementations, if provided.
+  // Here we want a contract, so implements makes Book define all required members itself rather than inheriting Borrowable's behavior.
 }
 
 void step5() {
