@@ -140,6 +140,19 @@ enum MemberType {
   }
 }
 
+extension MoneyText on int {
+  String get rs => 'Rs $this';
+}
+
+extension Initials on String {
+  String get initials => split(' ').map((w) => w[0]).join();
+}
+
+extension ShelfMath on List<LibraryItem> {
+  int totalLateFee(int days) =>
+      fold(0, (sum, item) => sum + item.lateFee(days));
+}
+
 void step1() {
   print('--- Step 1 ---');
   Book b = mainBook();
@@ -217,6 +230,14 @@ void step6() {
 
 void step7() {
   print('--- Step 7 ---');
+  MemberType type = MemberType.values[seed % 3];
+  int fee = mainBook().lateFee(daysLate);
+  int discountedFee = type.applyDiscount(fee);
+  print('Step 7: ${discountedFee.rs}');
+  print('Step 7: initials of "${titles[u]}" = ${titles[u].initials}');
+  List<LibraryItem> shelf = [mainBook(), mainMagazine(), mainDvd()];
+  int total = shelf.totalLateFee(daysLate);
+  print('Step 7: shelf fee for $daysLate days = ${total.rs}');
 }
 
 void step8() {
