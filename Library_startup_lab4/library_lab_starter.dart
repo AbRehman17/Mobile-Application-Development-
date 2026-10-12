@@ -45,11 +45,12 @@ void main() {
   step10();
 }
 
-class LibraryItem {
+abstract class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
   String describe() => '${title} (${year})';
+  int lateFee(int days);
 }
 
 class Book extends LibraryItem {
@@ -57,6 +58,8 @@ class Book extends LibraryItem {
   Book(super.title, super.year, this.pages);
   @override
   String describe() => '${super.describe()}, ${pages} pages';
+  @override
+  int lateFee(int days) => days * feePerDay;
 }
 
 Book mainBook() {
@@ -68,11 +71,27 @@ class Magazine extends LibraryItem {
   Magazine(super.title, super.year, this.issue);
   @override
   String describe() => '${super.describe()}, issue ${issue}';
+  @override
+  int lateFee(int days) => days * (feePerDay ~/ 2);
 }
 
 Magazine mainMagazine() {
   int i = (u + 1) % 10;
   return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
+}
+
+class Dvd extends LibraryItem {
+  final int minutes;
+  Dvd(super.title, super.year, this.minutes);
+  @override
+  String describe() => '${super.describe()},${minutes} minutes';
+  @override
+  int lateFee(int days) => days * feePerDay * 2;
+}
+
+Dvd mainDvd() {
+  int i = (u + 2) % 10;
+  return Dvd(titles[i], yearOf(i), 90 + seed % 40);
 }
 
 void step1() {
@@ -89,12 +108,22 @@ void step2() {
   print('Step 2: ${mainBook().describe()}');
   print('Step 2: ${mainMagazine().describe()}');
   // What would happen to the output if you forgot @override and mistyped the method name as descibe()?
-  // If we mistype describe() as descibe(), it will not override
-  // the parent method. @override helps the analyzer catch this mistake.
+  // If we mistype describe() as descibe(), it will not override the parent method. @override helps the analyzer catch this mistake.
 }
 
 void step3() {
   print('--- Step 3 ---');
+  print(
+    'Step 3: Book late fee for ${daysLate} days = ${mainBook().lateFee(daysLate)}',
+  );
+  print(
+    'Step 3: Magazine late fee for ${daysLate} days= ${mainMagazine().lateFee(daysLate)}',
+  );
+  print(
+    'Step 3: Dvd late fee for ${daysLate} days= ${mainDvd().lateFee(daysLate)}',
+  );
+  // Temporarily try LibraryItem('x', 2000). Read the error. Why can you not create an abstract class directly?
+  // An abstract class cannot be instantiated directly because it may contain methods without implementations that subclasses must provide.
 }
 
 void step4() {
