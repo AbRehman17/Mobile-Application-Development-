@@ -1,0 +1,46 @@
+PS C:\Users\prehm\OneDrive - Quaid-i-Azam University\University\Semester 7\MAD\Library_startup_lab4> dart run --enable-asserts .\library_lab_starter.dart
+Seed: 47 (t=4, u=7)
+--- Step 1 ---
+Step 1: Computer Networks (2013), 241 pages
+Step 1: stored as LibraryItem: Computer Networks
+Step 1: runtimeType = Book
+--- Step 2 ---
+Step 2: Computer Networks (2013), 241 pages
+Step 2: Database Systems (2015), issue 12
+--- Step 3 ---
+Step 3: Book late fee for 8 days = 72
+Step 3: Magazine late fee for 8 days= 32
+Step 3: Dvd late fee for 8 days= 144
+--- Step 4 ---
+Step 4: available? true
+Step 4: after borrow? false
+Step 4: after return? true
+Step 4: Book borrowable? true
+Step 4: Magazine borrowable? false
+Step 4: Dvd borrowable? false
+--- Step 5 ---
+Step 5: renewed 2 of 9 attempts (limit 2)
+Step 5: renew once more? false
+Step 5: dvd can renew too? true
+--- Step 6 ---
+Step 6: member type = guest (index 2)
+Step 6: max loans = 1
+Step 6: book fee 72 -> 72 after discount
+--- Step 7 ---
+Step 7: Rs 72
+Step 7: initials of "Computer Networks" = CN
+Step 7: shelf fee for 8 days = Rs 248
+--- Step 8 ---
+Step 8: Fine(72) + Fine(32) = Fine(104)
+Step 8: first bigger? true
+Step 8: equal copies? true
+Step 8: set size = 2
+--- Step 9 ---
+Step 9: items created = 12
+Step 9: capped fee = 153 (cap 190)
+Step 9: const copies identical? true
+Step 9: new copies identical? false
+--- Step 10 ---
+Step 10: 6 items, 2 borrowable, 4 renewable
+Step 10: S47 (guest) owes Fine(496)
+Step 10: over the cap? true
