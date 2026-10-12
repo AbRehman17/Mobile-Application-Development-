@@ -153,6 +153,31 @@ extension ShelfMath on List<LibraryItem> {
       fold(0, (sum, item) => sum + item.lateFee(days));
 }
 
+class Fine {
+  final int amount;
+
+  const Fine(this.amount);
+
+  Fine operator +(Fine o) {
+    return Fine(amount + o.amount);
+  }
+
+  bool operator >(Fine o) {
+    return amount > o.amount;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Fine && other.amount == amount;
+  }
+
+  @override
+  int get hashCode => amount.hashCode;
+
+  @override
+  String toString() => 'Fine($amount)';
+}
+
 void step1() {
   print('--- Step 1 ---');
   Book b = mainBook();
@@ -242,6 +267,20 @@ void step7() {
 
 void step8() {
   print('--- Step 8 ---');
+
+  Fine f1 = Fine(mainBook().lateFee(daysLate));
+  Fine f2 = Fine(mainMagazine().lateFee(daysLate));
+
+  print('Step 8: $f1 + $f2 = ${f1 + f2}');
+  print('Step 8: first bigger? ${f1 > f2}');
+  print('Step 8: equal copies? ${f1 == Fine(f1.amount)}');
+  print('Step 8: set size = ${{f1, Fine(f1.amount), f2}.length}');
+  // Delete your hashCode and run again. What happens to the set size,
+  // and why does Dart expect both == and hashCode together?
+  // If hashCode is removed, equal Fine objects can have different
+  // identity-based hash codes, so a Set may count them separately.
+  // Dart expects == and hashCode together: equal objects must have
+  // the same hash code for Set and Map lookups to work correctly.
 }
 
 void step9() {
