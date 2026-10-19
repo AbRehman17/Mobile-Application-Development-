@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
             ),
             const Tally(),
             SizedBox(height: 12),
-            GoalBanner(count: startCount, max: maxCount),
+            const BuggyCounter(),
           ],
         ),
       ),
@@ -208,11 +208,46 @@ class _BuggyCounterState extends State<BuggyCounter> {
         ElevatedButton(
           key: const Key('bug-button'),
           onPressed: () {
-            _clicks += bugStep;
+            setState(() {
+              _clicks += bugStep;
+            });
           },
           child: Text('+$bugStep'),
         ),
       ],
     );
+  }
+}
+
+class Countdown extends StatefulWidget {
+  const Countdown({super.key});
+  @override
+  State<Countdown> createState() => CountdownState();
+}
+
+class CountdownState extends State<Countdown> {
+  late int _left;
+  late Timer _timer;
+  @override
+  void initState() {
+    super.initState();
+    _left = startSeconds;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _left--);
+      if (_left <= 0) timer.cancel(); // stop at zero
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _left > 0
+        ? Text('Time left: $_left s', key: const Key('time-left'))
+        : const Text('Time is up!', key: Key('time-left'));
   }
 }
