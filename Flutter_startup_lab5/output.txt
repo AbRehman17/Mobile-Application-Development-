@@ -26,3 +26,5 @@ Task 7:
 =>After 3 taps, _clicks was 12, but the screen still showed 0 because setState() was not called.
 Task 8:
 =>The console shows a setState() called after dispose() error because the timer keeps running and calls setState() after the Countdown widget has been removed.
+Task 9:
+=>Builds increases by one per second because each timer tick calls setState once, which schedules one rebuild of Countdown. We can print lifecycleLog in main() or another suitable place to check whether dispose ran.
