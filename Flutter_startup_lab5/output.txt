@@ -20,4 +20,6 @@ Task 4:
 =>GoalBanner does not need setState() because it is a StatelessWidget and its count and max values are provided through its constructor. To show a new count, its parent would need to update the count and rebuild GoalBanner with the new value.
 Task 5:
 =>Tally and _TallyState are separate because Tally is an immutable widget configuration, while _TallyState stores and updates the changing count.
-Task6:
+Task 6:
+=>Hot reload: The widget configuration is rebuilt, but the existing State object is preserved, so the count stays 12. Hot restart: The app starts fresh and creates a new State object, so _count returns to startCount.
+Task 7:
