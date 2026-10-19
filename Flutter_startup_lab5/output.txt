@@ -1,5 +1,20 @@
 TASK 1:
 What is the difference between what runApp receives and what 
 MaterialApp receives as home?
-runApp() receives the root widget of the Flutter application, which is LabApp in our code. The home property of MaterialApp receives the widget that represents the initial screen, which is HomePage. In short, runApp() starts the app, while home specifies which screen appears first.
+=>runApp() receives the root widget of the Flutter application, which is LabApp in our code. The home property of MaterialApp receives the widget that represents the initial screen, which is HomePage. In short, runApp() starts the app, while home specifies which screen appears first.
 TASK 2:
+Why are the fields of a StatelessWidget final? What would the 
+compiler say if you removed final?
+=>The fields of a StatelessWidget are usually final because a stateless widget is immutable, meaning its values cannot change after the object is created. If we remove final, the compiler will report an error because a non-final instance field cannot be declared in a class marked @immutable (as StatelessWidget is). The error indicates that all instance fields in an immutable class must be final.
+TASK 3:
+=>The Text('Max: $maxCount') widget is 6 levels deep from LabApp:
+1. LabApp
+2. MaterialApp
+3. HomePage
+4. Scaffold
+5. SingleChildScrollView
+6. Column
+7. Row
+8. Text('Max: $maxCount')
+=>Task 4:
+
