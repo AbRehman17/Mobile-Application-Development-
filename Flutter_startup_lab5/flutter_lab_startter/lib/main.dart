@@ -48,12 +48,14 @@ class LabApp extends StatelessWidget {
   }
 }
 
+// Stateless: HomePage describes the screen; it does not store changing data.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Study Tracker: $course")),
+      appBar: AppBar(title: Text('Study Tracker: $course')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -61,6 +63,7 @@ class HomePage extends StatelessWidget {
           children: [
             StudentCard(name: studentName, roll: rollNo, course: course),
             const SizedBox(height: 12),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -69,8 +72,14 @@ class HomePage extends StatelessWidget {
                 Text('Max: $maxCount', key: const Key('info-max')),
               ],
             ),
+            const SizedBox(height: 12),
+
             const Tally(),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
+            const Countdown(),
+            const SizedBox(height: 12),
+
             const BuggyCounter(),
           ],
         ),
