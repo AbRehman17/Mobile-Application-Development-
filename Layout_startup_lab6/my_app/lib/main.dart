@@ -112,7 +112,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Clock(),
             const SizedBox(height: 12),
-            const SwapBoard(), // Step 5 (replaces the temporary Row)
+            const SwapBoard(),
+            const SizedBox(height: 12),
+            const InfoPanel(),
           ],
         ),
       ),
@@ -341,6 +343,49 @@ class _SwapBoardState extends State<SwapBoard> {
           key: const Key('swap'),
           onPressed: swap,
           child: const Text('Swap'),
+        ),
+      ],
+    );
+  }
+}
+
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // In a Column, which axis is the main axis?
+    // The main axis of a Column is the vertical axis (top to bottom).
+    //
+    // Why does crossAxisAlignment: CrossAxisAlignment.center in a Column
+    // move the children left or right and not up or down?
+    // Because the cross axis is the horizontal axis. crossAxisAlignment
+    // controls positioning along the cross axis, so in a Column it moves
+    // children horizontally (left / center / right).
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // The Row
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: MainAxisAlignment.center, // from YOUR SETTINGS
+          children: [
+            Text('Start: $startSec s', key: const Key('row-a')),
+            Text('Tick: $tick s', key: const Key('row-b')),
+            Text('Stop: $stopAt s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // The inner Column
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: CrossAxisAlignment.center, // from YOUR SETTINGS
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
         ),
       ],
     );
