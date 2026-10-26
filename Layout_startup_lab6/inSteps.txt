@@ -1,0 +1,43 @@
+Step 1
+Q: Why start Timer in initState instead of build? What if started in build?
+A: initState runs once. build runs repeatedly, so starting there creates multiple timers and speeds up the clock.
+
+Step 2
+Q: Why does Builds increase once per second, not twice?
+A: Each timer tick calls setState once, scheduling one Clock rebuild.
+Q: What happens without _timer.cancel() in dispose?
+A: The timer may call setState after disposal, causing "setState() called after dispose()".
+
+Step 3
+Q: Which is cheap/recreated: Widget or Element? Which keeps State?
+A: Widget is recreated; Element persists and associates the widget with its State.
+Q: Where is RenderObject and what does it do?
+A: RenderObject is in the render tree and handles layout, painting and hit-testing.
+
+Step 4
+Q: What is building Tile using ElevatedButton called? Why prefer it?
+A: Composition. It combines reusable widgets without unnecessary inheritance.
+
+Step 5
+Q: Without keys, why does the count remain on the left when labels move?
+A: Flutter matches widgets by type and position, so the left Element and its State stay while the widget label changes.
+
+Step 6
+Q: What is the main axis of Column? Why does crossAxisAlignment.center move children horizontally?
+A: Column's main axis is vertical; its cross axis is horizontal, so crossAxisAlignment controls left/right placement.
+
+Step 7
+Q: Why does Expanded make Text wrap? Explain constraints go down, sizes go up.
+A: Expanded gives Text a bounded width. Text lays out within that constraint and wraps instead of overflowing.
+
+Step 8
+Q: What happens if Expanded and Flexible are swapped? Which is Flexible with tight fit?
+A: The new Expanded button fills its allocated width; the new Flexible button may remain smaller. Expanded equals Flexible(fit: FlexFit.tight).
+
+Step 9
+Q: Which is inside the border, margin or padding? When use Padding/SizedBox?
+A: Padding is inside; margin is outside. Use Padding for spacing and SizedBox for fixed gaps/sizes when decoration is unnecessary.
+
+Step 10
+Q: What determines Stack size? What if icons come before the grey Container?
+A: Non-positioned children determine Stack size. The Container painted last would cover the icons.

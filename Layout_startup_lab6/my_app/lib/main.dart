@@ -1,4 +1,3 @@
-// main.dart - Team Board lab
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -6,10 +5,9 @@ import 'package:flutter/material.dart';
 const String studentName = 'Muhammad Hussain Abdul Rehman';
 const String rollNo = '04072313047';
 
-// ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
-final int t = seed ~/ 10; // tens digit
-final int u = seed % 10; // units digit
+final int t = seed ~/ 10;
+final int u = seed % 10;
 
 const List<String> courses = [
   'Mobile Dev',
@@ -41,62 +39,42 @@ const Map<String, MaterialColor> swatches = {
   'pink': Colors.pink,
   'green': Colors.green,
 };
-
 final String course = courses[u];
-
-// Steps 1-2: the clock
-final int startSec = 5 * (1 + t % 5); // where the clock starts
-final int tick = 1 + u % 3; // how much it adds every second
-final int ticks = 4 + u % 4; // how many ticks until it stops
-final int stopAt = startSec + ticks * tick; // the clock stops here
-
-// Steps 4-5: the tiles
+final int startSec = 5 * (1 + t % 5);
+final int tick = 1 + u % 3;
+final int ticks = 4 + u % 4;
+final int stopAt = startSec + ticks * tick;
 final String tileA = names[u % 6];
 final String tileB = names[(u + 2) % 6];
 final String tileC = names[(u + 4) % 6];
-final int tapsToMake = 2 + t % 3; // used by the experiment in Step 5
-
-// Step 6: axes (the NAMES are printed on the settings card; you type the enum)
+final int tapsToMake = 2 + t % 3;
 final String mainName = mains[u % 6];
 final String crossName = crosses[t % 3];
-
-// Step 8: Expanded and Flexible
 final double fixedW = 70.0 + 10 * u;
 final int flexA = 1 + t % 3;
 final int flexB = 1 + u % 2;
-
-// Step 9: Container
 final double boxMargin = 4.0 + 2 * (t % 5);
 final double boxPad = 8.0 + 2 * (u % 5);
 final double boxRadius = 4.0 * (1 + (t + u) % 4);
 final double boxBorder = 1.0 + t % 3;
-final String hue = hues[(t + u) % 5]; // use swatches[hue]!.shade100
-
-// Step 10: Stack
+final String hue = hues[(t + u) % 5];
 final double dotTop = 4.0 + 4 * (t % 4);
 final double dotRight = 4.0 + 4 * (u % 4);
 final double dotBottom = 4.0 + 4 * ((t + u) % 4);
 final double dotLeft = 4.0 + 4 * ((t + 2 * u) % 4);
-// ===========================================================================
-
-// Step 2 writes to this list from initState and dispose.
 final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Keep the name LabApp and its const constructor: the checker uses them.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Team Board', home: HomePage());
-  }
+  Widget build(BuildContext context) =>
+      const MaterialApp(title: 'Team Board', home: HomePage());
 }
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,10 +108,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// ---- Provided: shows YOUR numbers. Keep it on the page. Do not rename.
 class SettingsCard extends StatelessWidget {
   const SettingsCard({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -153,7 +129,6 @@ class SettingsCard extends StatelessWidget {
 
 class Clock extends StatefulWidget {
   const Clock({super.key});
-
   @override
   State<Clock> createState() => _ClockState();
 }
@@ -161,17 +136,11 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
-  int _builds = 0; // Step 2
-
+  int _builds = 0;
   @override
   void initState() {
     super.initState();
-    lifecycleLog.add('initState'); // Step 2
-    // Why start the Timer in initState and not inside build?
-    // initState runs only once when the State is created.
-    // If we started the Timer in build(), a new Timer would be created
-    // on every rebuild → many timers running at the same time →
-    // the clock would speed up dramatically.
+    lifecycleLog.add('initState');
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
       if (_seconds >= stopAt) timer.cancel();
@@ -180,56 +149,32 @@ class _ClockState extends State<Clock> {
 
   @override
   void dispose() {
-    _timer.cancel(); // Step 2
-    lifecycleLog.add('dispose'); // Step 2
+    _timer.cancel();
+    lifecycleLog.add('dispose');
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _builds++; // Step 2 – counts every rebuild
-
-    // Why does Builds go up by one per second and not by two?
-    // setState() triggers exactly one rebuild per tick.
-    // The framework does not rebuild twice for a single setState.
-    //
-    // What error would you see if the widget left the screen
-    // and _timer.cancel() was missing from dispose?
-    // You would get: "setState() called after dispose()"
-    // because the Timer would keep running and try to call setState
-    // on a disposed State object.
-
+    _builds++;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Session: $_seconds s', key: const Key('clock')),
         Text('Builds: $_builds', key: const Key('builds')),
-        Probe(seconds: _seconds), // Step 3 ← add this (no const!)
+        Probe(seconds: _seconds),
       ],
     );
   }
 }
 
-// ---- Step 3: Probe ----
 class Probe extends StatelessWidget {
   final int seconds;
-
   const Probe({super.key, required this.seconds});
-
   @override
   Widget build(BuildContext context) {
-    // Which of the two, Widget or Element, is “cheap and thrown away”
-    // and which one keeps the State?
-    // Widget is cheap and thrown away on every rebuild.
-    // Element stays alive and keeps the State.
-    //
-    // Where is the third one, the RenderObject, and what is its job?
-    // The RenderObject lives below the Element in the tree.
-    // Its job is layout, painting and hit-testing (the actual rendering).
-
     final bool above =
         context.findAncestorWidgetOfExactType<Scaffold>() != null;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -240,7 +185,7 @@ class Probe extends StatelessWidget {
         ),
         Text(
           'Element #${identityHashCode(context)}',
-          key: const Key('probe element'),
+          key: const Key('probe-element'),
         ),
         Text(
           'Context belongs to: ${context.widget.runtimeType}',
@@ -254,15 +199,8 @@ class Probe extends StatelessWidget {
 
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // Why does wrapping a Text in Expanded make it wrap its words?
-    // Constraints go down, sizes go up.
-    // Expanded forces the Text to take only 1/3 of the available width
-    // (tight width constraint). When the Text receives a limited max width,
-    // it wraps its text onto multiple lines instead of overflowing.
-
     return Row(
       children: [
         Expanded(
@@ -288,39 +226,24 @@ class SummaryRow extends StatelessWidget {
   }
 }
 
-// ---- Step 4: Welcome ----
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Welcome, $studentName', key: const Key('welcome')),
-    );
-  }
+  Widget build(BuildContext context) =>
+      Center(child: Text('Welcome, $studentName', key: const Key('welcome')));
 }
 
-// ---- Step 4: Tile ----
 class Tile extends StatefulWidget {
   final String label;
-
   const Tile(this.label, {super.key});
-
   @override
   State<Tile> createState() => _TileState();
 }
 
 class _TileState extends State<Tile> {
   int taps = 0;
-
   @override
   Widget build(BuildContext context) {
-    // You built Tile out of an ElevatedButton without writing extends ElevatedButton.
-    // What is this style called, and why does Flutter prefer it?
-    // This style is called composition (or "composition over inheritance").
-    // Flutter prefers it because it is more flexible, avoids deep inheritance trees,
-    // and lets you combine small, reusable widgets instead of creating many subclasses.
-
     return ElevatedButton(
       onPressed: () => setState(() => taps++),
       child: Text('${widget.label}: $taps'),
@@ -328,10 +251,8 @@ class _TileState extends State<Tile> {
   }
 }
 
-// ---- Step 5: SwapBoard ----
 class SwapBoard extends StatefulWidget {
   const SwapBoard({super.key});
-
   @override
   State<SwapBoard> createState() => _SwapBoardState();
 }
@@ -341,20 +262,10 @@ class _SwapBoardState extends State<SwapBoard> {
     Tile(tileA, key: ValueKey(tileA)),
     Tile(tileB, key: ValueKey(tileB)),
     Tile(tileC, key: ValueKey(tileC)),
-    // Tile(tileA),
-    // Tile(tileB),
-    // Tile(tileC),
   ];
-
   void swap() => setState(() => tiles = tiles.reversed.toList());
-
   @override
   Widget build(BuildContext context) {
-    // Without keys, why did the number stay at the left even though the label moved?
-    // Flutter matches widgets by type and position. Without keys, the Element (and its State)
-    // at position 0 stays in place. When the list is reversed, the new widget at position 0
-    // is given the old Element/State, so the count stays on the left while only the label changes.
-
     return Column(
       children: [
         Row(children: tiles),
@@ -370,25 +281,14 @@ class _SwapBoardState extends State<SwapBoard> {
 
 class InfoPanel extends StatelessWidget {
   const InfoPanel({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // In a Column, which axis is the main axis?
-    // The main axis of a Column is the vertical axis (top to bottom).
-    //
-    // Why does crossAxisAlignment: CrossAxisAlignment.center in a Column
-    // move the children left or right and not up or down?
-    // Because the cross axis is the horizontal axis. crossAxisAlignment
-    // controls positioning along the cross axis, so in a Column it moves
-    // children horizontally (left / center / right).
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // The Row
         Row(
           key: const Key('info-row'),
-          mainAxisAlignment: MainAxisAlignment.center, // from YOUR SETTINGS
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Start: $startSec s', key: const Key('row-a')),
             Text('Tick: $tick s', key: const Key('row-b')),
@@ -396,10 +296,9 @@ class InfoPanel extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        // The inner Column
         Column(
           key: const Key('info-col'),
-          crossAxisAlignment: CrossAxisAlignment.center, // from YOUR SETTINGS
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Name: $studentName', key: const Key('col-a')),
             Text('Roll no: $rollNo', key: const Key('col-b')),
@@ -411,20 +310,10 @@ class InfoPanel extends StatelessWidget {
   }
 }
 
-// ---- Step 8: ShareRow ----
 class ShareRow extends StatelessWidget {
   const ShareRow({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // What would change on the screen if you swapped Expanded and Flexible
-    // between the two buttons?
-    // The button that is Expanded would stretch to fill its flex share.
-    // The button that is Flexible would stay at its natural small size.
-    //
-    // Which one is “Flexible with fit: tight”?
-    // Expanded is just Flexible with fit: FlexFit.tight.
-
     return Row(
       key: const Key('share-row'),
       children: [
@@ -454,19 +343,10 @@ class ShareRow extends StatelessWidget {
   }
 }
 
-// ---- Step 9: InfoBox ----
 class InfoBox extends StatelessWidget {
   const InfoBox({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // Which one is inside the border, margin or padding?
-    // Padding is inside the border. Margin is outside the border.
-    //
-    // When would you use a plain Padding or SizedBox instead of a Container?
-    // Use Padding or SizedBox when you only need spacing and do not need
-    // background colour, border, or rounded corners. Container is heavier.
-
     return Container(
       key: const Key('info-box'),
       margin: EdgeInsets.all(boxMargin),
@@ -481,38 +361,24 @@ class InfoBox extends StatelessWidget {
   }
 }
 
-// ---- Step 10: StampStack ----
 class StampStack extends StatelessWidget {
   const StampStack({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // What decides the size of the Stack?
-    // The size of the Stack is decided by its non-positioned children
-    // (here the grey Container). Positioned children do not affect the size.
-    //
-    // What happens to the layout if the Icons come first and the grey
-    // Container last?
-    // The Icons would be drawn first (bottom layer) and the grey Container
-    // would cover them completely, so the star and circle would not be visible.
-
     return Stack(
       key: const Key('stack'),
       children: [
-        // Bottom layer
         Container(
           key: const Key('layer-base'),
           width: 300,
           height: 120,
           color: Colors.grey.shade300,
         ),
-        // Star – top right
         Positioned(
           top: dotTop,
           right: dotRight,
           child: const Icon(Icons.star, key: Key('dot-top')),
         ),
-        // Circle – bottom left
         Positioned(
           bottom: dotBottom,
           left: dotLeft,
