@@ -139,7 +139,6 @@ class SettingsCard extends StatelessWidget {
   }
 }
 
-// ---- Step 1: Clock ----
 class Clock extends StatefulWidget {
   const Clock({super.key});
 
@@ -150,10 +149,12 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
+  int _builds = 0; // Step 2
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState'); // Step 2
     // Why start the Timer in initState and not inside build?
     // initState runs only once when the State is created.
     // If we started the Timer in build(), a new Timer would be created
@@ -166,8 +167,33 @@ class _ClockState extends State<Clock> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel(); // Step 2
+    lifecycleLog.add('dispose'); // Step 2
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Text('Session: $_seconds s', key: const Key('clock'));
+    _builds++; // Step 2 – counts every rebuild
+
+    // Why does Builds go up by one per second and not by two?
+    // setState() triggers exactly one rebuild per tick.
+    // The framework does not rebuild twice for a single setState.
+    //
+    // What error would you see if the widget left the screen
+    // and _timer.cancel() was missing from dispose?
+    // You would get: "setState() called after dispose()"
+    // because the Timer would keep running and try to call setState
+    // on a disposed State object.
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Session: $_seconds s', key: const Key('clock')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
 
