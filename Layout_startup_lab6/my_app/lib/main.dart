@@ -108,9 +108,14 @@ class HomePage extends StatelessWidget {
           children: [
             const SettingsCard(),
             const SizedBox(height: 12),
+            const Welcome(), // Step 4
+            const SizedBox(height: 12),
             const Clock(),
-            // Add each new widget BELOW the previous one, in the order the
-            // steps tell you, with a SizedBox(height: 12) between widgets.
+            const SizedBox(height: 12),
+            Row(
+              // Step 4
+              children: [Tile(tileA), Tile(tileB), Tile(tileC)],
+            ),
           ],
         ),
       ),
@@ -261,6 +266,46 @@ class SummaryRow extends StatelessWidget {
           key: const Key('sum-c'),
         ),
       ],
+    );
+  }
+}
+
+// ---- Step 4: Welcome ----
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
+    );
+  }
+}
+
+// ---- Step 4: Tile ----
+class Tile extends StatefulWidget {
+  final String label;
+
+  const Tile(this.label, {super.key});
+
+  @override
+  State<Tile> createState() => _TileState();
+}
+
+class _TileState extends State<Tile> {
+  int taps = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    // You built Tile out of an ElevatedButton without writing extends ElevatedButton.
+    // What is this style called, and why does Flutter prefer it?
+    // This style is called composition (or "composition over inheritance").
+    // Flutter prefers it because it is more flexible, avoids deep inheritance trees,
+    // and lets you combine small, reusable widgets instead of creating many subclasses.
+
+    return ElevatedButton(
+      onPressed: () => setState(() => taps++),
+      child: Text('${widget.label}: $taps'),
     );
   }
 }
