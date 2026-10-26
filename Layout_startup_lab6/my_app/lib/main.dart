@@ -121,6 +121,8 @@ class HomePage extends StatelessWidget {
             const ShareRow(),
             const SizedBox(height: 12),
             const InfoBox(),
+            const SizedBox(height: 12),
+            const StampStack(),
           ],
         ),
       ),
@@ -475,6 +477,48 @@ class InfoBox extends StatelessWidget {
         border: Border.all(width: boxBorder),
       ),
       child: Text('Course: $course', key: const Key('box-text')),
+    );
+  }
+}
+
+// ---- Step 10: StampStack ----
+class StampStack extends StatelessWidget {
+  const StampStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // What decides the size of the Stack?
+    // The size of the Stack is decided by its non-positioned children
+    // (here the grey Container). Positioned children do not affect the size.
+    //
+    // What happens to the layout if the Icons come first and the grey
+    // Container last?
+    // The Icons would be drawn first (bottom layer) and the grey Container
+    // would cover them completely, so the star and circle would not be visible.
+
+    return Stack(
+      key: const Key('stack'),
+      children: [
+        // Bottom layer
+        Container(
+          key: const Key('layer-base'),
+          width: 300,
+          height: 120,
+          color: Colors.grey.shade300,
+        ),
+        // Star – top right
+        Positioned(
+          top: dotTop,
+          right: dotRight,
+          child: const Icon(Icons.star, key: Key('dot-top')),
+        ),
+        // Circle – bottom left
+        Positioned(
+          bottom: dotBottom,
+          left: dotLeft,
+          child: const Icon(Icons.circle, key: Key('dot-bottom')),
+        ),
+      ],
     );
   }
 }
