@@ -108,14 +108,11 @@ class HomePage extends StatelessWidget {
           children: [
             const SettingsCard(),
             const SizedBox(height: 12),
-            const Welcome(), // Step 4
+            const Welcome(),
             const SizedBox(height: 12),
             const Clock(),
             const SizedBox(height: 12),
-            Row(
-              // Step 4
-              children: [Tile(tileA), Tile(tileB), Tile(tileC)],
-            ),
+            const SwapBoard(), // Step 5 (replaces the temporary Row)
           ],
         ),
       ),
@@ -306,6 +303,46 @@ class _TileState extends State<Tile> {
     return ElevatedButton(
       onPressed: () => setState(() => taps++),
       child: Text('${widget.label}: $taps'),
+    );
+  }
+}
+
+// ---- Step 5: SwapBoard ----
+class SwapBoard extends StatefulWidget {
+  const SwapBoard({super.key});
+
+  @override
+  State<SwapBoard> createState() => _SwapBoardState();
+}
+
+class _SwapBoardState extends State<SwapBoard> {
+  var tiles = [
+    Tile(tileA, key: ValueKey(tileA)),
+    Tile(tileB, key: ValueKey(tileB)),
+    Tile(tileC, key: ValueKey(tileC)),
+    // Tile(tileA),
+    // Tile(tileB),
+    // Tile(tileC),
+  ];
+
+  void swap() => setState(() => tiles = tiles.reversed.toList());
+
+  @override
+  Widget build(BuildContext context) {
+    // Without keys, why did the number stay at the left even though the label moved?
+    // Flutter matches widgets by type and position. Without keys, the Element (and its State)
+    // at position 0 stays in place. When the list is reversed, the new widget at position 0
+    // is given the old Element/State, so the count stays on the left while only the label changes.
+
+    return Column(
+      children: [
+        Row(children: tiles),
+        ElevatedButton(
+          key: const Key('swap'),
+          onPressed: swap,
+          child: const Text('Swap'),
+        ),
+      ],
     );
   }
 }
