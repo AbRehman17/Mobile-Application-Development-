@@ -115,6 +115,8 @@ class HomePage extends StatelessWidget {
             const SwapBoard(),
             const SizedBox(height: 12),
             const InfoPanel(),
+            const SizedBox(height: 12),
+            const SummaryRow(),
           ],
         ),
       ),
@@ -244,25 +246,36 @@ class Probe extends StatelessWidget {
   }
 }
 
-// ---- Provided for Step 7. It overflows on purpose. Do not rename anything.
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Why does wrapping a Text in Expanded make it wrap its words?
+    // Constraints go down, sizes go up.
+    // Expanded forces the Text to take only 1/3 of the available width
+    // (tight width constraint). When the Text receives a limited max width,
+    // it wraps its text onto multiple lines instead of overflowing.
+
     return Row(
       children: [
-        Text(
-          'Part A: read the widget tree of the $course board from top to bottom.',
-          key: const Key('sum-a'),
+        Expanded(
+          child: Text(
+            'Part A: read the widget tree of the $course board from top to bottom.',
+            key: const Key('sum-a'),
+          ),
         ),
-        Text(
-          'Part B: build each box from small widgets and never extend a built-in class.',
-          key: const Key('sum-b'),
+        Expanded(
+          child: Text(
+            'Part B: build each box from small widgets and never extend a built-in class.',
+            key: const Key('sum-b'),
+          ),
         ),
-        Text(
-          'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
-          key: const Key('sum-c'),
+        Expanded(
+          child: Text(
+            'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
+            key: const Key('sum-c'),
+          ),
         ),
       ],
     );
